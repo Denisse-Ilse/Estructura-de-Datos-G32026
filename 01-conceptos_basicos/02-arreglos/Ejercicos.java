@@ -35,6 +35,68 @@ public class Ejercicio1 {
         }
     }
 }
+package mx.edu.uttt.menu;
+import javax.swing.JOptionPane;
+import mx.edu.uttt.matrices.Ejercicio1;
+
+public class main1 {
+    public static void main(String[] args) {
+        // 1. Pedir las dimensiones de la sala
+        int filas = leerEntero("¿Cuántas filas tiene la sala?");
+        int columnas = leerEntero("¿Cuántas columnas (asientos por fila) tiene?");
+
+        if (filas <= 0 || columnas <= 0) {
+            System.out.println("Las dimensiones deben ser mayores a 0.");
+            return;
+        }
+
+        Ejercicio1 sala = new Ejercicio1(filas, columnas);
+
+        int opcion;
+        do {
+            String menu = "SISTEMA DE RESERVA DE ASIENTOS\n\n"
+                    + "1. Reservar un asiento\n"
+                    + "2. Ver mapa de la sala\n"
+                    + "3. Salir\n\n"
+                    + "Elige una opción:";
+            opcion = leerEntero(menu);
+
+            switch (opcion) {
+                case 1:
+                    int fila = leerEntero("Número de fila (0 a " + (filas - 1) + "):");
+                    int columna = leerEntero("Número de columna (0 a " + (columnas - 1) + "):");
+                    sala.reservaAsiento(fila, columna);
+                    break;
+                case 2:
+                    System.out.println("\nMapa de la sala (0 = libre, 1 = ocupado):");
+                    sala.mostrarSala();
+                    break;
+                case 3:
+                    System.out.println("Hasta luego.");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (opcion != 3);
+    }
+
+
+    private static int leerEntero(String mensaje) {
+        while (true) {
+            String entrada = JOptionPane.showInputDialog(mensaje);
+
+            if (entrada == null) {
+                return 3;
+            }
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar un número entero.");
+            }
+        }
+    }
+
+}
 
 //Ejercico 2 : Acumulado de ventas por sucursal en mes(m*n)
 package mx.edu.uttt.matrices;
@@ -136,6 +198,53 @@ public class RegistroVentas {
 
 }
 
+package mx.edu.uttt.menu;
+import  mx.edu.uttt.matrices.RegistroVentas;
+import javax.swing.JOptionPane;
+public class main2 {
+    public static void main(String[] args) {
+        int m = leerEntero("¿Cuántas sucursales hay?");
+        int n = leerEntero("¿Cuántos meses se registran?");
+
+        if (m <= 0 || n <= 0) {
+            System.out.println("Operación cancelada: las dimensiones deben ser mayores a 0.");
+            return;
+        }
+
+        RegistroVentas registro = new RegistroVentas(m, n);
+
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int monto = leerEntero("Ventas de la Sucursal " + (i + 1)
+                        + " en el Mes " + (j + 1) + ":");
+                if (monto < 0) {
+                    System.out.println("Captura cancelada o monto inválido.");
+                    return;
+                }
+                registro.registrarVenta(i, j, monto);
+            }
+        }
+
+        System.out.println("\n===== REPORTE DE VENTAS =====");
+        System.out.println(registro.generarReporte());
+    }
+
+    private static int leerEntero(String mensaje) {
+        while (true) {
+            String entrada = JOptionPane.showInputDialog(mensaje);
+            if (entrada == null) {
+                return -1;
+            }
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar un número entero.");
+            }
+        }
+    }
+}
+
 //Ejercicio 3: Diagnostico de Matriz identidad y diagonal principal (n*n).
 package mx.edu.uttt.matrices;
 
@@ -192,6 +301,69 @@ public class Ejercicio3 {
         }
     }
 }
+package mx.edu.uttt.menu;
+
+import mx.edu.uttt.matrices.Ejercicio3;
+import javax.swing.JOptionPane;
+
+public class main3 {
+    public static void main(String[] args) {
+        Integer filas = leerEntero("¿Cuántas filas tiene la matriz?");
+        Integer columnas = leerEntero("¿Cuántas columnas tiene la matriz?");
+
+        if (filas == null || columnas == null || filas <= 0 || columnas <= 0) {
+            System.out.println("Operación cancelada: dimensiones inválidas.");
+            return;
+        }
+
+        Ejercicio3 m = new Ejercicio3(filas, columnas);
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                Integer valor = leerEntero("Elemento [" + i + "][" + j + "]:");
+                if (valor == null) {
+                    System.out.println("Captura cancelada.");
+                    return;
+                }
+                m.setValor(i, j, valor);
+            }
+        }
+
+        System.out.println("\nMatriz ingresada:");
+        m.mostrar();
+
+
+        if (!m.esCuadrada()) {
+            System.out.println("\nADVERTENCIA: la matriz de " + filas + "x" + columnas
+                    + " no es cuadrada. Operación cancelada.");
+            return;
+        }
+
+        if (m.esIdentidad()) {
+            System.out.println("\nLa matriz SÍ es una matriz identidad.");
+        } else {
+            System.out.println("\nLa matriz NO es una matriz identidad.");
+        }
+
+
+        System.out.println("Suma de la diagonal principal: " + m.sumaDiagonal());
+    }
+
+
+    private static Integer leerEntero(String mensaje) {
+        while (true) {
+            String entrada = JOptionPane.showInputDialog(mensaje);
+            if (entrada == null) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar un número entero.");
+            }
+        }
+    }
+}
 
 //Ejercicio 4: Transpocicion dinamica de matriz(M x N->N x N)
 package mx.edu.uttt.matrices;
@@ -239,6 +411,56 @@ public class Ejercicio4 {
         }
     }
 }
+package mx.edu.uttt.menu;
+import javax.swing.JOptionPane;
+import mx.edu.uttt.matrices.Ejercicio4;
+
+public class main4 {
+    public static void main(String[] args) {
+        Integer filas = leerEntero("¿Cuántas filas tiene la matriz?");
+        Integer columnas = leerEntero("¿Cuántas columnas tiene la matriz?");
+
+        if (filas == null || columnas == null || filas <= 0 || columnas <= 0) {
+            System.out.println("Operación cancelada: dimensiones inválidas.");
+            return;
+        }
+
+        Ejercicio4 original = new Ejercicio4(filas, columnas);
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                Integer valor = leerEntero("Elemento [" + i + "][" + j + "]:");
+                if (valor == null) {
+                    System.out.println("Captura cancelada.");
+                    return;
+                }
+                original.setValor(i, j, valor);
+            }
+        }
+
+        System.out.println("\nMatriz original (" + filas + "x" + columnas + "):");
+        original.mostrar();
+
+        Ejercicio4 t = original.obtenerTranspuesta();
+        System.out.println("\nMatriz transpuesta (" + t.getFilas() + "x" + t.getColumnas() + "):");
+        t.mostrar();
+    }
+
+    private static Integer leerEntero(String mensaje) {
+        while (true) {
+            String entrada = JOptionPane.showInputDialog(mensaje);
+            if (entrada == null) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar un número entero.");
+            }
+        }
+    }
+}
+
 
 //Ejercicio 5: Rotacin de la matriz a 90° en sentido orario, N x N.
 package mx.edu.uttt.matrices;
@@ -284,6 +506,61 @@ public class Ejercicio5 {
                 System.out.print(datos[i][j] + "\t");
             }
             System.out.println();
+        }
+    }
+}
+package mx.edu.uttt.menu;
+
+import mx.edu.uttt.matrices.Ejercicio5;
+import javax.swing.JOptionPane;
+
+public class main5 {
+    public static void main(String[] args) {
+        Integer filas = leerEntero("¿Cuántas filas tiene la matriz?");
+        Integer columnas = leerEntero("¿Cuántas columnas tiene la matriz?");
+
+        if (filas == null || columnas == null || filas <= 0 || columnas <= 0) {
+            System.out.println("Operación cancelada: dimensiones inválidas.");
+            return;
+        }
+
+        Ejercicio5 m = new Ejercicio5(filas, columnas);
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                Integer valor = leerEntero("Elemento [" + i + "][" + j + "]:");
+                if (valor == null) {
+                    System.out.println("Captura cancelada.");
+                    return;
+                }
+                m.setValor(i, j, valor);
+            }
+        }
+
+        System.out.println("\nMatriz original:");
+        m.mostrar();
+
+        Ejercicio5 rotada = m.rotarHorario();
+        if (rotada == null) {
+            System.out.println("Operación cancelada.");
+            return;
+        }
+
+        System.out.println("\nMatriz rotada 90° a la derecha:");
+        rotada.mostrar();
+    }
+
+    private static Integer leerEntero(String mensaje) {
+        while (true) {
+            String entrada = JOptionPane.showInputDialog(mensaje);
+            if (entrada == null) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar un número entero.");
+            }
         }
     }
 }
